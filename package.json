@@ -1,0 +1,21 @@
+{
+  "name": "ftp2webapi1",
+  "version": "1.0.0",
+  "description": "reading hostlib files from remote and call web api",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ftp2webapi1"
+  },
+  "keywords": [
+    "ftp"
+  ],
+  "author": "Rekalo AB",
+  "license": "ISC",
+  "dependencies": {
+    "ftp": "^0.3.10"
+  }
+}
