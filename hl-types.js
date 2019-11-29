@@ -8,7 +8,7 @@ class DayData {
       this.end;
       this.quality = 0;      
     }
-    static parse (arrayBuffer, hour) {
+    static parse (arrayBuffer, hour=7) {
        
         let mon = arrayBuffer[0] -1;
         let day = arrayBuffer[1];
@@ -21,9 +21,10 @@ class DayData {
         result.p = arrayBuffer.readFloatLE(15);
         result.t = arrayBuffer.readFloatLE(19);
 
-
         result.start =  new Date(year + 2000, mon, day, hour);
-        result.end =  new Date(year + 2000, mon, day + 1, hour);
+        result.end =  new Date(year + 2000, mon, day, hour);
+        //32 will result in the first day of the next month
+        result.end.setDate(day + 1);
         result.quality = 192;
         return result;
     }
@@ -40,7 +41,7 @@ class HourData {
     }
     static parse (arrayBuffer) {
 
-        let mon = arrayBuffer[0]-1;
+        let mon = arrayBuffer[0] - 1;
         let day = arrayBuffer[1];
         let year = arrayBuffer[2];
         let hour = arrayBuffer[3];
@@ -54,7 +55,8 @@ class HourData {
         result.t = arrayBuffer.readFloatLE(21);
 
         result.start =  new Date(year + 2000, mon, day, hour, mm);
-        result.end =  new Date(year + 2000, mon, day, hour + 1, mm);
+        result.end =  new Date(year + 2000, mon, day, hour, mm);
+        result.end.setHours(hour + 1);
         result.quality = 192;
         return result;
     }
