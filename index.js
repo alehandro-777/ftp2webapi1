@@ -29,11 +29,19 @@ var files = ['S055R1C.316', 'S056R1R.316', 'S055R1S.316', 'S057R1C.316', 'S092R1
 
 async function loadFile(dir, file){
   return new Promise(function(resolve, reject) {
+    let chunks = [];
     c.get(file, function(err, stream) {      
       if (err) reject(err);
       else {
+        stream.on('data', (chunk) => { 
+          chunks.push(chunk);  
+        });
+        stream.on('end', () => {  
+          let buf = Buffer.concat(chunks);
+          console.log(buf);
+        });
         stream.once('close', function() { 
-          resolve('Ok');
+          resolve('Ok'); 
         });
         stream.pipe(fs.createWriteStream(dir + file));      
       }
