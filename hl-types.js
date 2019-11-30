@@ -8,18 +8,19 @@ class DayData {
       this.end;
       this.quality = 0;      
     }
-    static parse (arrayBuffer, hour=7) {
-       
-        let mon = arrayBuffer[0] -1;
-        let day = arrayBuffer[1];
-        let year = arrayBuffer[2];
+    static parse (arrayBuffer, pos, hour=7) {
+        let offset =  pos >=0 ? pos : arrayBuffer.length + pos;
+
+        let mon = arrayBuffer[offset + 0] -1;
+        let day = arrayBuffer[offset + 1];
+        let year = arrayBuffer[offset + 2];
         
         let result = new DayData();
         
-        result.q = arrayBuffer.readFloatLE(3);
-        result.dp = arrayBuffer.readFloatLE(11);
-        result.p = arrayBuffer.readFloatLE(15);
-        result.t = arrayBuffer.readFloatLE(19);
+        result.q = arrayBuffer.readFloatLE(offset + 3);
+        result.dp = arrayBuffer.readFloatLE(offset + 11);
+        result.p = arrayBuffer.readFloatLE(offset + 15);
+        result.t = arrayBuffer.readFloatLE(offset + 19);
 
         result.start =  new Date(year + 2000, mon, day, hour);
         result.end =  new Date(year + 2000, mon, day, hour);
@@ -39,20 +40,21 @@ class HourData {
       this.end;
       this.quality = 0;      
     }
-    static parse (arrayBuffer) {
+    static parse (arrayBuffer, pos) {
+      let offset =  pos >=0 ? pos : arrayBuffer.length + pos;
 
-        let mon = arrayBuffer[0] - 1;
-        let day = arrayBuffer[1];
-        let year = arrayBuffer[2];
-        let hour = arrayBuffer[3];
-        let mm = arrayBuffer[4];
+        let mon = arrayBuffer[offset + 0] - 1;
+        let day = arrayBuffer[offset + 1];
+        let year = arrayBuffer[offset + 2];
+        let hour = arrayBuffer[offset + 3];
+        let mm = arrayBuffer[offset + 4];
 
         let result = new HourData();
         
-        result.q = arrayBuffer.readFloatLE(5);
-        result.dp = arrayBuffer.readFloatLE(13);
-        result.p = arrayBuffer.readFloatLE(17);
-        result.t = arrayBuffer.readFloatLE(21);
+        result.q = arrayBuffer.readFloatLE(offset + 5);
+        result.dp = arrayBuffer.readFloatLE(offset + 13);
+        result.p = arrayBuffer.readFloatLE(offset + 17);
+        result.t = arrayBuffer.readFloatLE(offset + 21);
 
         result.start =  new Date(year + 2000, mon, day, hour, mm);
         result.end =  new Date(year + 2000, mon, day, hour, mm);
