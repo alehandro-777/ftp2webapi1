@@ -1,5 +1,5 @@
 const Types = require('./hl-types');
-
+const http = require('http');
 var Client = require('ftp');
 var fs = require('fs');
 
@@ -27,12 +27,12 @@ c.connect(config);
 
 var files = ['S056R1R.316', 'S091R1D.316', 'S001R1C.316'];
 
-function loadFile(file, pos){
+function loadFile(ftp, file, pos){
   return new Promise(function(resolve, reject) {
     
     let chunks = [];
     //c.restart(pos, function(err){}); 
-    c.get(file, function(err, stream) {      
+    ftp.get(file, function(err, stream) {      
       if (err) reject(err);
       else {
         stream.on('data', (chunk) => { 
@@ -47,9 +47,9 @@ function loadFile(file, pos){
   });
  }
 
-function load(){
+function load(ftp){
 
-    loadFile('./1/S056R1R.316').then( 
+    loadFile(ftp, './1/S056R1R.316').then( 
       (data) => {
         let hour = Types.HourData.parse(data, -29);
         console.log(hour);
@@ -58,7 +58,7 @@ function load(){
         console.log(err);
       }
     );
-    loadFile('S001R1C.316').then( 
+    loadFile(ftp,'S001R1C.316').then( 
       (data) => {
         let hour = Types.InstantData.parse(data);
         console.log(hour);
@@ -67,7 +67,7 @@ function load(){
         console.log(err);
       }
     );
-    loadFile('S091R1D.316').then( 
+    loadFile(ftp,'S091R1D.316').then( 
       (data) => {
         let hour = Types.DayData.parse(data, -27, 7);
         console.log(hour);
@@ -76,7 +76,7 @@ function load(){
         console.log(err);
       }
     );
-    loadFile('S055R1S.316').then( 
+    loadFile(ftp,'S055R1S.316').then( 
       (data) => {
         let hour = Types.StatData.parse(data);
         console.log(hour);
@@ -90,7 +90,7 @@ function load(){
 }
 
 c.on('ready', function() {  
-  load();
+  load(c);
   c.end();
   //c.connect(config); 
 });
@@ -105,12 +105,26 @@ setInterval(() => {
   c.connect(config);
 }, 3000);
  
-      //let res = Types.InstData.parse(contents);   //27 - day, 29 - hour
-      //let res = Types.DayData.parse(contents, -27); //27 - day, 29 - hour
-      //let res = Types.HourData.parse(buffr); //27 - day, 29 - hour
-      //let stat = Types.StatData.parse(contents);    //27 - day, 29 - hour
+getFileList(http);
 
-//readFileChunc('d:\\S056R1R.316', -29, 29);
+function getFileList(httpClient){
+  httpClient.get('http://127.0.0.1:3000/mpoints', (resp) => {
+    let data = '';
+  
+    // A chunk of data has been recieved.
+    resp.on('data', (chunk) => {
+      data += chunk;
+    });
+  
+    // The whole response has been received. Print out the result.
+    resp.on('end', () => {
+      console.log(JSON.parse(data));
+    });
+  
+  }).on("error", (err) => {
+    console.log("Error: " + err.message);
+  });
 
+}
 
 
