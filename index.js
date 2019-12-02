@@ -49,7 +49,7 @@ function loadFile(ftp, file, pos){
 
 function load(ftp){
 
-    loadFile(ftp, './1/S056R1R.316').then( 
+    loadFile(ftp, 'S056R1R.316').then( 
       (data) => {
         let hour = Types.HourData.parse(data, -29);
         console.log(hour);
@@ -105,7 +105,7 @@ setInterval(() => {
   c.connect(config);
 }, 3000);
  
-getFileList(http);
+//getFileList(http);
 
 function getFileList(httpClient){
   httpClient.get('http://127.0.0.1:3000/mpoints', (resp) => {
