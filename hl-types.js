@@ -105,13 +105,18 @@ class StatData {
       this.lastupdate = null;
       this.quality = 0;;
     }
+    //УТГ 96 байт
+    //Флоутек ГОСТ 123 байта
     static parse (arrayBuffer) {
-        let mon = arrayBuffer[90]-1;
-        let day = arrayBuffer[91];
-        let year = arrayBuffer[92];
-        let hour = arrayBuffer[93];
-        let mm = arrayBuffer[94];
-        let ss = arrayBuffer[95];
+        
+      let tmIdx = arrayBuffer.length - 6;
+        
+        let mon = arrayBuffer[tmIdx +0]-1;
+        let day = arrayBuffer[tmIdx +1];
+        let year = arrayBuffer[tmIdx +2];
+        let hour = arrayBuffer[tmIdx +3];
+        let mm = arrayBuffer[tmIdx +4];
+        let ss = arrayBuffer[tmIdx +5];
 
         let result = new StatData();
                 
