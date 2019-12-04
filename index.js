@@ -3,7 +3,7 @@ const Support= require('./schedule');
 
 const http = require('http');
 var Client = require('ftp');
-var fs = require('fs');
+
 
 var config = {    
     host     : 'localhost',
@@ -45,7 +45,7 @@ function loadFile(ftp, file, pos){
       }
     });
   });
- }
+}
 
 
 function getFromFtpWritetoWebApi(ftp, http){  
