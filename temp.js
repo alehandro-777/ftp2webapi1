@@ -27,4 +27,3 @@ function readFileChunc(filename, offset, size){
     //end promise  
     });
 }
-

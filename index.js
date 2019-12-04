@@ -1,4 +1,6 @@
 const Types = require('./hl-types');
+const Support= require('./schedule');
+
 const http = require('http');
 var Client = require('ftp');
 var fs = require('fs');
@@ -13,7 +15,7 @@ var config = {
 }
 
 var c = new Client();
-
+var schedule = new Support.UpdateSchedule(10, 10, 10, 10);
 /*
 c.on('ready', function() {
   c.list(function(err, list) {
@@ -47,24 +49,11 @@ function loadFile(ftp, file, pos){
   });
  }
 
- class RequestCfgData {
-  constructor(id, ip, dir, isAbsP, haveRfile, cHour) {
-    this.id = id;
-    this.ip = ip;
-    this.dir = dir;
-    this.isAbsP = isAbsP;
-    this.haveRfile = haveRfile;
-    this.cHour = cHour;
-    this.instFile = "";
-    this.hourFile = "";
-    this.dayFile = "";
-    this.statFile = "";
-  }
-}
-
 
 function load(ftp){  
   
+  console.log(schedule);
+
   if( !files ) return;
 
   for( let i=0; i<files.length; i++ ) {  
@@ -73,6 +62,7 @@ function load(ftp){
       (data) => {
         let hour = Types.HourData.parse(data, -29);
         putRequest(http, files[i].id, hour, "lastHour");
+        schedule.update(files[i].id, "lastHour", hour.end);
         //console.log(hour);
       }, 
       (err)=>{
@@ -83,6 +73,7 @@ function load(ftp){
       (data) => {
         let hour = Types.InstantData.parse(data);
         putRequest(http, files[i].id, hour, "currInst");
+        schedule.update(files[i].id, "currInst", hour.lastupdate);
         //console.log(hour);
       }, 
       (err)=>{
@@ -93,6 +84,7 @@ function load(ftp){
       (data) => {
         let hour = Types.DayData.parse(data, -27, 7);
         putRequest(http, files[i].id, hour, "lastDay");
+        schedule.update(files[i].id, "lastDay", hour.lastupdate);
         //console.log(hour);
       }, 
       (err)=>{
@@ -103,6 +95,7 @@ function load(ftp){
       (data) => {
         let hour = Types.StatData.parse(data);
         putRequest(http, files[i].id, hour, "currStat");
+        schedule.update(files[i].id, "currStat", hour.lastupdate);
         //console.log(hour);
       }, 
       (err)=>{
