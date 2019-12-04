@@ -6,12 +6,10 @@ var Client = require('ftp');
 var fs = require('fs');
 
 var config = {    
-
     host     : 'localhost',
     port     : 21,
     user     : 'ftpuser1',
     password : ''
-
 }
 
 var c = new Client();
@@ -50,7 +48,7 @@ function loadFile(ftp, file, pos){
  }
 
 
-function load(ftp){  
+function getFromFtpWritetoWebApi(ftp, http){  
   
   console.log(schedule);
 
@@ -106,15 +104,13 @@ function load(ftp){
 
   }//end for
 
-
-
 }
 
 c.on('ready', function() {  
 
   requestCfg(http);
 
-  load(c);
+  getFromFtpWritetoWebApi(c, http);
   
   c.end();
   //c.connect(config); 
