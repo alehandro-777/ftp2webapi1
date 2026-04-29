@@ -1,3 +1,6 @@
+test-jira 1
+
+
 namespace HLData
 {
 //    TdFile =  record          // усредненные за сутки
